@@ -1,0 +1,14 @@
+{
+  "name": "sir-edu-mobile",
+  "app_id": "",
+  "v2": true,
+  "typescript": true,
+  "proxies": [{
+    "path": "/api",
+    "proxyUrl": "http://localhost:3000/api"
+  },
+  {
+    "path": "/uploads",
+    "proxyUrl": "http://localhost:3000/uploads"
+  }]
+}

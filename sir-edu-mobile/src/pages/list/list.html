@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Alunos</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+  <ion-list padding-right>
+    <button ion-item *ngFor="let student of students" (click)="itemTapped($event, student)">
+        <ion-avatar *ngIf="student.avatar" item-left>
+          <img src="{{student.avatar.path}}">
+        </ion-avatar>
+        <ion-avatar *ngIf="!student.avatar" item-left>
+          <img src="../../assets/icon/favicon.ico">
+        </ion-avatar>
+        <h2>{{student.name}}</h2>
+        <p>Turma: {{student.class || ''}} Escola: {{student.school || ''}}</p>
+    </button>
+  </ion-list>
+</ion-content>

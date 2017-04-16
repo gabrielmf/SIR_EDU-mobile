@@ -1,0 +1,17 @@
+<div class="student-page">
+  <ion-header>
+    <ion-navbar>
+      <ion-row>
+        <ion-col col-12 class="student-header">
+          <div *ngIf="student.avatar" class="avatar">
+              <img class="img-circle" src="{{student.avatar.path}}" width="45"/>
+          </div>
+          <ion-icon class="avatar" primary *ngIf="!student.avatar" name="contact"></ion-icon>
+          <div class="info">
+            <h2>{{ student.name }}</h2>
+          </div>
+        </ion-col>
+    </ion-row>
+    </ion-navbar>
+  </ion-header>
+</div>

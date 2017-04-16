@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Login</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <form (ngSubmit)="onSubmit(LoginForm)" #LoginForm="ngForm">
+        <ion-list>
+            <ion-item>
+                <ion-label floating>Username</ion-label>
+                <ion-input type="email" 
+                    [(ngModel)]="loginForm.email" 
+                    name="email"
+                    #name="ngModel"
+                    required>
+                </ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>Password</ion-label>
+                <ion-input type="password" 
+                    [(ngModel)]="loginForm.password" 
+                    name="password"
+                    #name="ngModel"
+                    required>
+                </ion-input>
+            </ion-item>
+        </ion-list>
+        <button type="submit" ion-button full large color="secondary">Entrar</button>
+    </form>
+</ion-content>

@@ -1,0 +1,22 @@
+.student-page {
+  
+  .student-header {
+
+    .avatar {
+      float: left;
+
+      .img-circle {
+        border-radius:  50%;
+      }
+    }
+
+    .info {
+      float: left;
+      padding: 12px 0 0 10px;
+
+      h2 {
+        margin: 0;
+      }
+    }
+  }
+}
