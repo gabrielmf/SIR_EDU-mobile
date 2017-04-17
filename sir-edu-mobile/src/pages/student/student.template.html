@@ -1,17 +1,34 @@
 <div class="student-page">
   <ion-header>
     <ion-navbar>
-      <ion-row>
-        <ion-col col-12 class="student-header">
-          <div *ngIf="student.avatar" class="avatar">
-              <img class="img-circle" src="{{student.avatar.path}}" width="45"/>
-          </div>
-          <ion-icon class="avatar" primary *ngIf="!student.avatar" name="contact"></ion-icon>
-          <div class="info">
-            <h2>{{ student.name }}</h2>
-          </div>
-        </ion-col>
-    </ion-row>
+    <ion-title>
+      <div *ngIf="student.avatar" class="avatar">
+          <img class="img-circle" src="{{student.avatar.path}}" width="45"/>
+      </div>
+      <ion-icon class="avatar" *ngIf="!student.avatar" name="contact"></ion-icon>
+      {{ student.name }}
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addFile()">
+        <ion-icon name="person-add"></ion-icon>
+      </button>
+    </ion-buttons>
     </ion-navbar>
   </ion-header>
+  <ion-content padding class="student-files">
+    <ion-card>
+      <img *ngIf="image" [src]="image"/>
+      <ion-card-content>
+        <ion-card-title>
+          Nine Inch Nails Live
+        </ion-card-title>
+        <p>
+          The most popular industrial group ever, and largely responsible for bringing the music to a mass audience.
+        </p>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+  <ion-fab bottom right>
+    <button ion-fab color="secondary" (click)="addMedia()"><ion-icon name="add"></ion-icon></button>
+  </ion-fab>
 </div>

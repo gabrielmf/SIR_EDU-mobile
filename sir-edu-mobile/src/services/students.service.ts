@@ -4,7 +4,8 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export default class StudentsService {
-  private studentsUrl = '/api/students';  // URL to web API
+  // private studentsUrl = '/api/students';  // URL to web API
+  private studentsUrl = 'http://192.168.25.22:3000/api/students';  // URL to web API
   
   constructor (private http: Http) {}
 

@@ -3,6 +3,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { Camera } from '@ionic-native/camera';
 
 import { MyApp } from './app.component';
 import AppPages from '../pages';
@@ -31,6 +32,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     StatusBar,
     SplashScreen,
     ServiceProviders,
+    Camera,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
