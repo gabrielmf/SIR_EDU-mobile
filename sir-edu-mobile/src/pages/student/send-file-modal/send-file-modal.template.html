@@ -12,9 +12,22 @@
   </ion-toolbar>
 </ion-header>
 <ion-content padding>
+  <ion-buttons>
+    <button full large ion-button color="secondary" (click)="cameraActions()">
+      <ion-icon name="camera"></ion-icon>
+    </button>
+  </ion-buttons>
   <ion-list>
     <ion-item>
-      <ion-label floating>Comentário:</ion-label>
+      <ion-label>Data</ion-label>
+      <ion-datetime displayFormat="DD/MM/YYYY"
+        [(ngModel)]="date"
+        cancelText="cancelar"
+        doneText="ok"
+      ></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label floating>Comentário</ion-label>
       <ion-textarea class="send-file-modal"></ion-textarea>
     </ion-item>
 </ion-list>

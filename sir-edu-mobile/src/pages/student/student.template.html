@@ -1,16 +1,20 @@
 <div class="student-page">
   <ion-header>
     <ion-navbar>
-    <ion-title>
-      <div *ngIf="student.avatar" class="avatar">
-          <img class="img-circle" src="{{student.avatar.path}}" width="45"/>
+      <div class="avatar">
+          <img *ngIf="student.avatar" class="img-circle" src="{{student.avatar.path}}" width="45"/>
+          <ion-icon id="avatar-default-icon" 
+            *ngIf="!student.avatar"
+             name="contact"
+             color="primary"
+          ></ion-icon>
       </div>
-      <ion-icon class="avatar" *ngIf="!student.avatar" name="contact"></ion-icon>
+    <ion-title>
       {{ student.name }}
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only (click)="addFile()">
-        <ion-icon name="person-add"></ion-icon>
+      <button ion-button (click)="addFile()">
+        <ion-icon id="add-file-icon" name="add-circle"></ion-icon>
       </button>
     </ion-buttons>
     </ion-navbar>
@@ -28,7 +32,4 @@
       </ion-card-content>
     </ion-card>
   </ion-content>
-  <ion-fab bottom right>
-    <button ion-fab color="secondary" (click)="addMedia()"><ion-icon name="add"></ion-icon></button>
-  </ion-fab>
 </div>

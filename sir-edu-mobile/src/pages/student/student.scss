@@ -1,26 +1,26 @@
 .student-page {
-  
-  .student-header {
 
-    .avatar {
-      float: left;
+  .avatar {
+    float: left;
 
-      .img-circle {
-        border-radius:  50%;
-      }
+    .img-circle {
+      border-radius:  50%;
     }
+  }
 
-    .info {
-      float: left;
-      padding: 12px 0 0 10px;
-
-      h2 {
-        margin: 0;
-      }
-    }
+  .toolbar-content {
+    display: flex !important;
   }
 
   .student-files {
     position: absolute;
+  }
+
+  #add-file-icon {
+    font-size: 35px;
+  }
+
+  #avatar-default-icon {
+    font-size: 35px;
   }
 }
