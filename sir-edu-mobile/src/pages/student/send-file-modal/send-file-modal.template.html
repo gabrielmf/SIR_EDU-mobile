@@ -11,12 +11,23 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content padding>
-  <ion-buttons>
-    <button full large ion-button color="secondary" (click)="cameraActions()">
-      <ion-icon name="camera"></ion-icon>
-    </button>
-  </ion-buttons>
+<ion-content padding class="send-file-modal">
+  <button full large ion-button color="secondary" (click)="cameraActions()">
+    <ion-icon name="camera"></ion-icon>
+  </button>
+  <div *ngIf="media" class="media-preview">
+    <img *ngIf="media.type === 'image'" [src]="media.src"/>
+    <video webkit-playsinline *ngIf="media.type === 'video'" controls preload="metadata">
+      <source src="{{media.src}}" type="{{media.mimeType}}">
+    </video>
+  </div>
+  <button class="remove-media"
+    *ngIf="hasMedia" 
+    full ion-button icon-right color="danger" 
+    (click)="removeFile()">
+    Remover
+    <ion-icon name="trash"></ion-icon>
+  </button>
   <ion-list>
     <ion-item>
       <ion-label>Data</ion-label>
@@ -28,8 +39,8 @@
     </ion-item>
     <ion-item>
       <ion-label floating>Comentário</ion-label>
-      <ion-textarea class="send-file-modal"></ion-textarea>
+      <ion-textarea></ion-textarea>
     </ion-item>
 </ion-list>
-  <button full large ion-button>Salvar</button>
+  <button full large ion-button (click)="uploadFile()">Salvar</button>
 </ion-content>

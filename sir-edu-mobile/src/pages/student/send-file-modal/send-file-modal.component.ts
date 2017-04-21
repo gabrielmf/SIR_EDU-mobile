@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { ViewController, ActionSheetController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { MediaCapture, CaptureVideoOptions, MediaFile, CaptureError } from '@ionic-native/media-capture';
+import { File, FileEntry, Entry } from '@ionic-native/file';
 
 @Component({
   selector: 'send-file-modal',
@@ -9,13 +10,21 @@ import { MediaCapture, CaptureVideoOptions, MediaFile, CaptureError } from '@ion
 })
 export class SendFileModal {
 
-  image: Object;
+  media: { 
+    src: String,
+    mimeType: String,
+    type: String
+  };
+  date: String;
+  hasMedia: Boolean;
 
   constructor(
+    private ngZone: NgZone,
     public viewCtrl: ViewController, 
     public actionSheetCtrl: ActionSheetController,
     private camera: Camera,
-    private mediaCapture: MediaCapture) {
+    private mediaCapture: MediaCapture,
+    private fileCordova: File ) {
   }
 
   dismiss() {
@@ -24,23 +33,27 @@ export class SendFileModal {
 
  takePicture() {
     const options: CameraOptions = {
-      quality: 50,
+      quality: 70,
       targetWidth: 800,
-      targetHeight: 600, 
+      targetHeight: 600,
+      encodingType: this.camera.EncodingType.JPEG,
       destinationType: this.camera.DestinationType.DATA_URL,
       mediaType: this.camera.MediaType.PICTURE,
-      correctOrientation: true,
-      allowEdit: false
     }
 
     this.camera.getPicture(options).then((imageData) => {
      // imageData is either a base64 encoded string or a file URI
      // If it's base64:
      let base64Image = 'data:image/jpeg;base64,' + imageData;
-     this.image = base64Image;
-     alert(this.image);
+     this.media = {
+       src: base64Image,
+       mimeType: null,
+       type: 'image'
+     };
+     
+     this.hasMedia = true;
     }, (err) => {
-     // Handle error
+      console.log(err);
     });
   }
 
@@ -51,8 +64,21 @@ export class SendFileModal {
       mediaType: this.camera.MediaType.ALLMEDIA
     }
 
-    this.camera.getPicture(options).then((file) => {
-     alert('TODO handle file');
+    this.camera.getPicture(options).then((fileUri) => {
+      this.fileCordova.resolveLocalFilesystemUrl('file://'+fileUri).then((f: FileEntry)=>{
+        f.file((resolvedFile: any) => {
+          this.ngZone.run(() => {
+            this.media = {
+              src: f.toURL(),
+              mimeType: resolvedFile.type,
+              type: typeof resolvedFile.type === 'string' ? resolvedFile.type.split('/')[0] : null
+            }
+          });
+        });
+      }).catch((err)=>{
+        console.log(err)
+      });
+      this.hasMedia = true;
     }, (err) => {
      // Handle error
      alert(err);
@@ -60,10 +86,20 @@ export class SendFileModal {
   }
 
   recordVideo() {
-    this.mediaCapture.captureVideo().then((video: MediaFile[]) => {
-      alert('gravou');
+    this.mediaCapture.captureVideo().then((videos: MediaFile[]) => {
+      let video = videos[0];
+      
+      this.ngZone.run(() => {
+        this.media = {
+          src: video.fullPath,
+          mimeType: video.type,
+          type: 'video'
+        };
+      });
+
+      this.hasMedia = true;
     }).catch((err: CaptureError) => {
-      alert(err);
+      console.log(err);
     })
   }
 
@@ -102,6 +138,15 @@ export class SendFileModal {
    });
 
    actionSheet.present();
+ }
+
+ removeFile() {
+   this.media = null;
+   this.hasMedia = false;
+ }
+
+ uploadFile() {
+   alert('TODO upload');
  }
 
 }

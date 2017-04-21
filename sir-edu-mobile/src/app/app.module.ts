@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { Camera } from '@ionic-native/camera';
 import { MediaCapture } from '@ionic-native/media-capture';
+import { File } from '@ionic-native/file';
 
 import { MyApp } from './app.component';
 import AppPages from '../pages';
@@ -35,6 +36,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ServiceProviders,
     Camera,
     MediaCapture,
+    File,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

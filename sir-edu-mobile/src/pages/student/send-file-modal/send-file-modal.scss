@@ -1,5 +1,21 @@
 .send-file-modal {
+
   textarea {
-    resize: both !important;
+    height: 100px;
+  }
+
+  .media-preview {
+    margin: 10px 0;
+    height: 400px;
+    width: 100%;
+
+    img, video {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .remove-media {
+    margin: 10px 0;
   }
 }
