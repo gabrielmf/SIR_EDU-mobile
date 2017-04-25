@@ -10,14 +10,16 @@
 <ion-content>
   <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
   <ion-list padding-right>
-    <button ion-item (click)="itemTapped($event, {name: 'Nome'})">
+    <button ion-item (click)="goToStudentPage(student)" (press)="showStudentPopover($event, student)">
         <ion-avatar item-left>
           <img src="assets/icon/favicon.ico">
         </ion-avatar>
         <h2>Nome</h2>
         <p>Descrição</p>
     </button>
-    <button ion-item *ngFor="let student of students" (click)="itemTapped($event, student)">
+    <button ion-item *ngFor="let student of students" 
+        (click)="goToStudentPage(student)"
+        (press)="showStudentPopover($event, student)">
         <ion-avatar *ngIf="student.avatar" item-left>
           <img src="{{student.avatar.path}}">
         </ion-avatar>

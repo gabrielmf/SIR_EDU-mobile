@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, PopoverController } from 'ionic-angular';
 import StudentPage from '../student';
+import StudentActions from '../../components/student-actions';
 import StudentsService from '../../services/students.service';
 
 @Component({
@@ -11,11 +12,15 @@ export class ListPage implements OnInit {
   selectedItem: any;
   students: Array<Object>;
 
-  constructor(public navCtrl: NavController, public studentsService: StudentsService) {
+  constructor(
+    private navCtrl: NavController,
+    private studentsService: StudentsService,
+    private popoverCtrl: PopoverController) {
       this.students = [];
   }
 
   ngOnInit() {
+    console.log('aqui');
     this.studentsService.getStudentList().then(
       list => { console.log('list', list); this.students = list }
     ).catch(
@@ -23,10 +28,17 @@ export class ListPage implements OnInit {
     );
   }
 
-  itemTapped(event, student) {
-    // That's right, we're pushing to ourselves!
+  goToStudentPage(student) {
     this.navCtrl.push(StudentPage, {
       student: student
     });
+  }
+
+  showStudentPopover(ev, student) {
+    let popoverItem = this.popoverCtrl.create(StudentActions, { student }, {
+      cssClass: 'student-actions-content'
+    });
+    
+    popoverItem.present({ ev });
   }
 }

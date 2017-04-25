@@ -11,12 +11,12 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content padding class="send-file-modal">
+<ion-content overflow-scroll="true" padding class="send-file-modal">
   <button full large ion-button color="secondary" (click)="cameraActions()">
     <ion-icon name="camera"></ion-icon>
   </button>
   <div *ngIf="media" class="media-preview">
-    <img *ngIf="media.type === 'image'" [src]="media.src"/>
+    <img *ngIf="media.type === 'image'" src="{{media.src}}"/>
     <video webkit-playsinline *ngIf="media.type === 'video'" controls preload="metadata">
       <source src="{{media.src}}" type="{{media.mimeType}}">
     </video>
@@ -28,19 +28,39 @@
     Remover
     <ion-icon name="trash"></ion-icon>
   </button>
-  <ion-list>
-    <ion-item>
-      <ion-label>Data</ion-label>
-      <ion-datetime displayFormat="DD/MM/YYYY"
-        [(ngModel)]="date"
-        cancelText="cancelar"
-        doneText="ok"
-      ></ion-datetime>
-    </ion-item>
-    <ion-item>
-      <ion-label floating>Comentário</ion-label>
-      <ion-textarea></ion-textarea>
-    </ion-item>
-</ion-list>
-  <button full large ion-button (click)="uploadFile()">Salvar</button>
+  <form (ngSubmit)="uploadFile(UploadFileForm)" #UploadFileForm="ngForm">
+    <ion-list>
+      <ion-item>
+        <ion-label floating>Título</ion-label>
+        <ion-input
+          name="title"
+          ngModel
+          #title="ngModel">
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Comentário</ion-label>
+        <ion-textarea
+          name="comment"
+          ngModel 
+          #comment="ngModel">
+        </ion-textarea>
+      </ion-item>
+      <ion-item>
+        <ion-label>Data</ion-label>
+        <ion-datetime
+          class="data"
+          name="date"
+          ngModel
+          displayFormat="DD/MM/YYYY"
+          cancelText="cancelar"
+          #date="ngModel"
+          doneText="ok"
+          required>
+        </ion-datetime>
+      </ion-item>
+      <ion-item></ion-item>
+    </ion-list>
+    <button full large ion-button type="submit">Salvar</button>
+  </form>
 </ion-content>

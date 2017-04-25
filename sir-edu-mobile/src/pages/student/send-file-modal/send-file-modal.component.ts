@@ -1,30 +1,36 @@
 import { Component, NgZone } from '@angular/core';
-import { ViewController, ActionSheetController } from 'ionic-angular';
+import { NavParams, ViewController, ActionSheetController, LoadingController, ToastController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { MediaCapture, CaptureVideoOptions, MediaFile, CaptureError } from '@ionic-native/media-capture';
-import { File, FileEntry, Entry } from '@ionic-native/file';
+import { File, FileEntry } from '@ionic-native/file';
+import FilesService from '../../../services/files.service';
 
 @Component({
   selector: 'send-file-modal',
   templateUrl: 'send-file-modal.template.html'
 })
 export class SendFileModal {
-
   media: { 
     src: String,
     mimeType: String,
     type: String
   };
-  date: String;
   hasMedia: Boolean;
+  studentId: String;
 
   constructor(
+    private params: NavParams,
     private ngZone: NgZone,
     public viewCtrl: ViewController, 
     public actionSheetCtrl: ActionSheetController,
     private camera: Camera,
     private mediaCapture: MediaCapture,
-    private fileCordova: File ) {
+    private fileCordova: File,
+    private filesService: FilesService,
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController) {
+    
+    this.studentId = this.params.get('studentId');
   }
 
   dismiss() {
@@ -37,23 +43,20 @@ export class SendFileModal {
       targetWidth: 800,
       targetHeight: 600,
       encodingType: this.camera.EncodingType.JPEG,
-      destinationType: this.camera.DestinationType.DATA_URL,
+      destinationType: this.camera.DestinationType.FILE_URI,
       mediaType: this.camera.MediaType.PICTURE,
     }
 
-    this.camera.getPicture(options).then((imageData) => {
-     // imageData is either a base64 encoded string or a file URI
-     // If it's base64:
-     let base64Image = 'data:image/jpeg;base64,' + imageData;
-     this.media = {
-       src: base64Image,
-       mimeType: null,
-       type: 'image'
-     };
+    this.camera.getPicture(options).then((image) => {
+        this.media = {
+          src: image,
+          mimeType: 'image/jpeg',
+          type: 'image'
+        };
      
-     this.hasMedia = true;
+        this.hasMedia = true;
     }, (err) => {
-      console.log(err);
+        console.log(err);
     });
   }
 
@@ -65,17 +68,17 @@ export class SendFileModal {
     }
 
     this.camera.getPicture(options).then((fileUri) => {
-      this.fileCordova.resolveLocalFilesystemUrl('file://'+fileUri).then((f: FileEntry)=>{
+      this.fileCordova.resolveLocalFilesystemUrl('file://'+fileUri).then((f: FileEntry) => {
         f.file((resolvedFile: any) => {
-          this.ngZone.run(() => {
-            this.media = {
-              src: f.toURL(),
-              mimeType: resolvedFile.type,
-              type: typeof resolvedFile.type === 'string' ? resolvedFile.type.split('/')[0] : null
-            }
-          });
+            this.ngZone.run(() => {
+                this.media = {
+                  src: f.toURL(),
+                  mimeType: resolvedFile.type,
+                  type: typeof resolvedFile.type === 'string' ? resolvedFile.type.split('/')[0] : null
+                }
+            });
         });
-      }).catch((err)=>{
+      }).catch((err) => {
         console.log(err)
       });
       this.hasMedia = true;
@@ -145,8 +148,39 @@ export class SendFileModal {
    this.hasMedia = false;
  }
 
- uploadFile() {
-   alert('TODO upload');
+ private displayMessage(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 5000,
+      position: 'bottom'
+    });
+
+    toast.present();
+ }
+
+ uploadFile(form) {
+    if(form.invalid) {
+      return;
+    }
+    
+    let loading = this.loadingCtrl.create({
+      content: 'Enviando arquivo...'
+    });
+
+    loading.present();
+
+    loading.onDidDismiss((msg) => {
+      this.viewCtrl.dismiss();
+      this.displayMessage(msg);
+    });
+
+    let body = { ...form.value, studentId: this.studentId };
+    
+    this.filesService.uploadFile(this.media, body).then((data) => {
+        loading.dismiss('Arquivo salvo com sucesso.');
+    }).catch((err) => {
+        loading.dismiss('Ocorreu algum erro, não foi possível salvar o arquivo.');
+    });
  }
 
 }

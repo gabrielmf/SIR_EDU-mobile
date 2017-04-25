@@ -1,11 +1,11 @@
-import { Injectable }              from '@angular/core';
-import { Http, Response }          from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
+import { BASE_URL, BASE_URL_API } from '../app/app.settings'; 
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export default class StudentsService {
-  // private studentsUrl = '/api/students';  // URL to web API
-  private studentsUrl = 'http://192.168.25.22:3000/api/students';  // URL to web API
+  private studentsUrl = BASE_URL_API + 'students';  // URL to web API
   
   constructor (private http: Http) {}
 
@@ -16,8 +16,18 @@ export default class StudentsService {
                     .catch(this.handleError);
   }
 
+  deleteStudent(studentId): Promise<any> {
+    return this.http.delete(this.studentsUrl, { params: {id: studentId }})
+                    .toPromise();
+  }
+
   private extractData(res: Response) {
     let body = res.json();
+    body.map((k) => {
+      if(k.avatar) {
+        k.avatar.path = BASE_URL + k.avatar.path;
+      }
+    })
     return body || {};
   }
 
