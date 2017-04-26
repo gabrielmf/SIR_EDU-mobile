@@ -3,6 +3,7 @@ import { NavController, NavParams, PopoverController } from 'ionic-angular';
 import StudentPage from '../student';
 import StudentActions from '../../components/student-actions';
 import StudentsService from '../../services/students.service';
+import StudentDetailsPage from '../student-details';
 
 @Component({
   selector: 'page-list',
@@ -10,6 +11,7 @@ import StudentsService from '../../services/students.service';
 })
 export class ListPage implements OnInit {
   selectedItem: any;
+  studentList: Array<Object>;
   students: Array<Object>;
 
   constructor(
@@ -17,15 +19,28 @@ export class ListPage implements OnInit {
     private studentsService: StudentsService,
     private popoverCtrl: PopoverController) {
       this.students = [];
+      this.studentList = [];
   }
 
   ngOnInit() {
-    console.log('aqui');
     this.studentsService.getStudentList().then(
-      list => { console.log('list', list); this.students = list }
+      list => { 
+        this.studentList = list;
+        this.students = list;
+       }
     ).catch(
       error => { console.log(error) }
     );
+  }
+
+  searchStudent(evt) {
+    let val = evt.target.value.toLowerCase().trim();
+
+    if (this.studentList.length) {
+      this.students = this.studentList.filter((student: any) => {
+          if (student && student.name) return student.name.toLowerCase().includes(val);
+      });
+    }
   }
 
   goToStudentPage(student) {
@@ -40,5 +55,11 @@ export class ListPage implements OnInit {
     });
     
     popoverItem.present({ ev });
+  }
+
+  addStudent() {
+    this.navCtrl.push(StudentDetailsPage, {
+      pageMode: 'add'
+    });
   }
 }

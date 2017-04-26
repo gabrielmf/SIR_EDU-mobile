@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import StudentsService from '../../services/students.service';
+import StudentDetailsPage from '../../pages/student-details';
 
 @Component({
   selector: 'student-actions',
@@ -21,14 +22,20 @@ export class StudentActions {
   }
 
   view() {
-    console.log('TODO view');
+    this.navCtrl.push(StudentDetailsPage, {
+      student: this.student,
+      pageMode: 'view'
+    });
   }
 
   edit() {
-    console.log('TODO edit');
+    this.navCtrl.push(StudentDetailsPage, {
+      student: this.student,
+      pageMode: 'edit'
+    });
   }
 
-  remove() {
+  remove(student) {
     this.studentsService.deleteStudent(this.student._id);
   }
 }

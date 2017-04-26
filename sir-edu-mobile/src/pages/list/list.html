@@ -4,11 +4,20 @@
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>Alunos</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addStudent()">
+        <ion-icon name="person-add"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
-
 <ion-content>
-  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+  <ion-searchbar
+    (ionInput)="searchStudent($event)"
+    showCancelButton="true"
+    placeholder="Procurar aluno"
+    animated="true">
+  </ion-searchbar>
   <ion-list padding-right>
     <button ion-item (click)="goToStudentPage(student)" (press)="showStudentPopover($event, student)">
         <ion-avatar item-left>
