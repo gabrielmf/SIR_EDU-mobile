@@ -20,6 +20,7 @@ export class StudentPage {
     private fileService: FilesService) {
 
     this.student = navParams.get('student') || {};
+    this.files = [];
     this.image = '';
   }
 

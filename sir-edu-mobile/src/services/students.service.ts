@@ -16,6 +16,13 @@ export default class StudentsService {
                     .catch(this.handleError);
   }
 
+  saveStudent (student): Promise<any> {
+    return this.http.post(this.studentsUrl, student)
+                    .toPromise()
+                    .then(this.extractData)
+                    .catch(this.handleError);
+  }
+
   deleteStudent(studentId): Promise<any> {
     return this.http.delete(this.studentsUrl, { params: {id: studentId }})
                     .toPromise();

@@ -18,25 +18,38 @@
     placeholder="Procurar aluno"
     animated="true">
   </ion-searchbar>
-  <ion-list padding-right>
-    <button ion-item (click)="goToStudentPage(student)" (press)="showStudentPopover($event, student)">
+  <ion-list>
+    <ion-item (click)="goToStudentPage(student)">
         <ion-avatar item-left>
           <img src="assets/icon/favicon.ico">
         </ion-avatar>
         <h2>Nome</h2>
         <p>Descrição</p>
-    </button>
-    <button ion-item *ngFor="let student of students" 
-        (click)="goToStudentPage(student)"
-        (press)="showStudentPopover($event, student)">
+        <ion-icon name="more"
+          item-right 
+          (click)="showStudentPopover($event, student)"
+          class="student-options">
+        </ion-icon>
+    </ion-item>
+    <ion-item *ngFor="let student of students"
+        (click)="goToStudentPage(student)">
         <ion-avatar *ngIf="student.avatar" item-left>
           <img src="{{student.avatar.path}}">
         </ion-avatar>
-        <ion-avatar *ngIf="!student.avatar" item-left>
-          <img src="assets/icon/favicon.ico">
-        </ion-avatar>
+        <ion-icon
+           class="default-avatar"
+          *ngIf="!student.avatar"
+           item-left
+           name="contact"
+           color="primary">
+          </ion-icon>
         <h2>{{student.name}}</h2>
         <p>Turma: {{student.class || ''}} Escola: {{student.school || ''}}</p>
-    </button>
+        <ion-icon name="more"
+          item-right 
+          (click)="showStudentPopover($event, student)"
+          class="student-options">
+        </ion-icon>
+    </ion-item>
   </ion-list>
 </ion-content>

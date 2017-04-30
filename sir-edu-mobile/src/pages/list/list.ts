@@ -50,6 +50,7 @@ export class ListPage implements OnInit {
   }
 
   showStudentPopover(ev, student) {
+    ev.stopPropagation();
     let popoverItem = this.popoverCtrl.create(StudentActions, { student }, {
       cssClass: 'student-actions-content'
     });

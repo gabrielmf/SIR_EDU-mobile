@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { Camera, CameraOptions } from '@ionic-native/camera';
+import { File, FileEntry } from '@ionic-native/file';
 import StudentsService from '../../services/students.service';
 
 @Component({
@@ -21,25 +23,81 @@ export class StudentDetails {
     {label: 'Transtorno do Espectro Autista'},
     {label: 'Baixa Visão'},
     {label: 'Deficiência Auditiva/Surdez'},
-    {label: 'Deficiência Intelectual'},
+    {label: 'Deficiência Intelecdevdactic.com/images-videos-fullscreen-ionic/tual'},
     {label: 'Transtorno de Oposição e desafio(TOD)'},
     {label: 'Síndrome de Down'},
     {label: 'Surdocegueira'},
     {label: 'Síndrome do X frágil'},
     {label: 'Transtornos psicóticos agudos e transitórios'},
     {label: 'Transtorno de conduta'}
-];
+  ];
 
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    public studentsService: StudentsService) {
-    this.student = navParams.get('student') || {};
+    public studentsService: StudentsService,
+    private camera: Camera,
+    private file: File) {
+    this.student = navParams.get('student') || { specialNeeds: [] };
     this.pageMode = navParams.get('pageMode') || 'add';
     this.pageTitle = 'Cadastrar aluno';
     
     if (this.pageMode !== 'add') {
       this.pageTitle = this.pageMode === 'edit' ? 'Editar aluno' : 'Dados do aluno';
     }
+  }
+
+  choosePicture(prop: string) {
+    const options: CameraOptions = {
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+      destinationType: this.camera.DestinationType.FILE_URI,
+      mediaType: this.camera.MediaType.ALLMEDIA
+    }
+    console.log('update')
+      this.camera.getPicture(options).then(fileUri => {
+          this.file.resolveLocalFilesystemUrl('file://'+fileUri).then((fileEntry: FileEntry) => {
+                fileEntry.file((file: any) => {
+                      console.log('1')
+                      const reader = new FileReader();
+                      reader.onloadend = (fileReadResult: any) => {
+                        console.log('2')
+                        let data = new Uint8Array(fileReadResult.target.result);
+                        let blob = new Blob([data], { type: file.type });
+                        this.student[prop] = { file: blob, path: fileEntry.toURL(), filename: fileEntry.name };
+                        console.log('3')
+                    };
+                      reader.readAsArrayBuffer(file);
+                })
+            }).catch(err => { console.log(err)});
+          }).catch(err => { console.log(err)});
+
+        console.log(this.student);
+  }
+
+  updateSpecialNeeds(value) {
+      let newSelectionArray;
+      console.log('change', value);
+      if(this.student.specialNeeds && this.student.specialNeeds.indexOf(value) > -1) {
+          newSelectionArray = this.student.specialNeeds.filter(s => s !== value)
+      } else {
+          newSelectionArray = [...this.student.specialNeeds || '', value];
+      }
+
+      this.student.specialNeeds = newSelectionArray;
+  }
+
+  onSubmit() {
+    let formData = new FormData();
+    
+    Object.keys(this.student).forEach((key) => {
+        if(typeof this.student[key] === 'object' && this.student[key].file) {
+          formData.append(key, this.student[key].file, this.student[key].filename);
+        }
+        else {
+          formData.append(key, this.student[key]);
+        }
+    });
+    
+    this.studentsService.saveStudent(formData);
   }
 }

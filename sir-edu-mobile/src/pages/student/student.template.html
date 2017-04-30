@@ -1,5 +1,5 @@
-<div class="student-page">
-  <ion-header>
+
+  <ion-header class="student-page">
     <ion-navbar>
       <div class="avatar">
           <img *ngIf="student.avatar" class="img-circle" src="{{student.avatar.path}}" width="45"/>
@@ -19,20 +19,21 @@
     </ion-buttons>
     </ion-navbar>
   </ion-header>
-  <ion-content padding class="student-files">
-    <ion-card *ngFor="let file of files">
-      <img *ngIf="file.mimeType==='image/jpeg'" src="{{file.url}}"/>
-      <video *ngIf="file.mimeType==='video/mp4'" controls preload="metadata" heigth="500">
-        <source src="{{file.url}}" type="{{file.mimeType}}">
-      </video>
-      <ion-card-content>
-        <ion-card-title>
-          {{file.date}}
-        </ion-card-title>
-        <p>
-          {{file.comment}}
-        </p>
-      </ion-card-content>
-    </ion-card>
+  <ion-content>
+    <ion-list [virtualScroll]="files" approxItemHeight="500px">
+        <ion-card ion-item *virtualItem="let file">
+          <img *ngIf="file.mimeType==='image/jpeg'" [src]="file.url" height="350"/>
+          <video *ngIf="file.mimeType==='video/mp4'" controls preload="metadata" height="350" width="350">
+            <source src="{{file.url}}" type="{{file.mimeType}}">
+          </video>
+          <ion-card-content>
+            <ion-card-title>
+              {{file.date}}
+            </ion-card-title>
+            <p>
+              {{file.comment}}
+            </p>
+          </ion-card-content>
+        </ion-card>
+    </ion-list>
   </ion-content>
-</div>

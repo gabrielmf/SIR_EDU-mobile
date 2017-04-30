@@ -11,14 +11,14 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content overflow-scroll="true" padding class="send-file-modal">
+<ion-content padding class="send-file-modal">
   <button full large ion-button color="secondary" (click)="cameraActions()">
     <ion-icon name="camera"></ion-icon>
   </button>
   <div *ngIf="media" class="media-preview">
-    <img *ngIf="media.type === 'image'" src="{{media.src}}"/>
+    <img *ngIf="media.type === 'image'" src="{{media.src}}" height="350" width="350"/>
     <video webkit-playsinline *ngIf="media.type === 'video'" controls preload="metadata">
-      <source src="{{media.src}}" type="{{media.mimeType}}">
+      <source src="{{media.src}}" type="{{media.mimeType}}" height="350" width="350">
     </video>
   </div>
   <button class="remove-media"
@@ -28,7 +28,7 @@
     Remover
     <ion-icon name="trash"></ion-icon>
   </button>
-  <form (ngSubmit)="uploadFile(UploadFileForm)" #UploadFileForm="ngForm">
+  <form #UploadFileForm="ngForm">
     <ion-list>
       <ion-item>
         <ion-label floating>Título</ion-label>
@@ -61,6 +61,6 @@
       </ion-item>
       <ion-item></ion-item>
     </ion-list>
-    <button full large ion-button type="submit">Salvar</button>
+    <button full large ion-button (click)="uploadFile(UploadFileForm)">Salvar</button>
   </form>
 </ion-content>
