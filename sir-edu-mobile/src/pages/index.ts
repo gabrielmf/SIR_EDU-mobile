@@ -1,7 +1,7 @@
 import { HomePage } from './home/home';
 import { ListPage } from './list/list';
 import LoginPage from './login';
-import StudentPage from './student';
+import { StudentPage, FileActions } from './student';
 import SendFileModalPage from './student/send-file-modal';
 import StudentDetailsPage from './student-details';
 
@@ -10,6 +10,7 @@ const pages = [
     ListPage,
     LoginPage,
     StudentPage,
+    FileActions,
     SendFileModalPage,
     StudentDetailsPage
 ];

@@ -17,6 +17,7 @@ export class SendFileModal {
   };
   hasMedia: Boolean;
   studentId: String;
+  file: any;
 
   constructor(
     private params: NavParams,
@@ -31,6 +32,11 @@ export class SendFileModal {
     private toastCtrl: ToastController) {
     
     this.studentId = this.params.get('studentId');
+    this.file = this.params.get('file') || null;
+
+    if (this.file) {
+      console.log('file', this.file);
+    }
   }
 
   dismiss() {
@@ -169,15 +175,15 @@ export class SendFileModal {
 
     loading.present();
 
-    loading.onDidDismiss((msg) => {
-      this.viewCtrl.dismiss();
+    loading.onDidDismiss((msg, data) => {
+      this.viewCtrl.dismiss(data);
       this.displayMessage(msg);
     });
 
     let body = { ...form.value, studentId: this.studentId };
     
     this.filesService.uploadFile(this.media, body).then((data) => {
-        loading.dismiss('Arquivo salvo com sucesso.');
+        loading.dismiss('Arquivo salvo com sucesso.', data);
     }).catch((err) => {
         loading.dismiss('Ocorreu algum erro, não foi possível salvar o arquivo.');
     });

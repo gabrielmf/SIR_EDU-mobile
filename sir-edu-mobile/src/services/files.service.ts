@@ -21,6 +21,14 @@ export default class FilesService {
           .catch(this.handleError);
   }
 
+  removeFile(fileId) {
+      console.log(fileId);
+      return this.http.delete(this.filesUrl + fileId)
+          .toPromise()
+          .then(res => res.json())
+          .catch(this.handleError);
+  }
+
   private extractData(res: Response) {
     let body = res.json() || {};
     

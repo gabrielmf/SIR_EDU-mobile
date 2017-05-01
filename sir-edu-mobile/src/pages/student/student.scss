@@ -4,7 +4,9 @@
     float: left;
 
     .img-circle {
-      border-radius:  50%;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
     }
   }
 
@@ -18,5 +20,16 @@
 
   #avatar-default-icon {
     font-size: 35px;
+  }
+}
+
+.student-content {
+  img, video {
+    max-height: 500px;
+    width: 100%;
+  }
+
+  .item-actions {
+    float: right;
   }
 }

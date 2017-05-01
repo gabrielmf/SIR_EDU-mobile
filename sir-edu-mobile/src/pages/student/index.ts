@@ -1,3 +1,3 @@
-import { StudentPage } from './student.component';
+import { StudentPage, FileActions } from './student.component';
 
-export default StudentPage;
+export { StudentPage, FileActions };

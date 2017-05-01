@@ -5,7 +5,7 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export default class StudentsService {
-  private studentsUrl = BASE_URL_API + 'students';  // URL to web API
+  private studentsUrl = BASE_URL_API + 'students/';  // URL to web API
   
   constructor (private http: Http) {}
 
@@ -19,17 +19,17 @@ export default class StudentsService {
   saveStudent (student): Promise<any> {
     return this.http.post(this.studentsUrl, student)
                     .toPromise()
-                    .then(this.extractData)
+                    .then(res => res.json())
                     .catch(this.handleError);
   }
 
   deleteStudent(studentId): Promise<any> {
-    return this.http.delete(this.studentsUrl, { params: {id: studentId }})
-                    .toPromise();
+    return this.http.delete(this.studentsUrl, studentId).toPromise();
   }
 
   private extractData(res: Response) {
     let body = res.json();
+
     body.map((k) => {
       if(k.avatar) {
         k.avatar.path = BASE_URL + k.avatar.path;

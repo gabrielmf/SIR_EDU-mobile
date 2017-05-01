@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, ToastController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { File, FileEntry } from '@ionic-native/file';
 import StudentsService from '../../services/students.service';
@@ -37,7 +37,9 @@ export class StudentDetails {
     public navParams: NavParams,
     public studentsService: StudentsService,
     private camera: Camera,
-    private file: File) {
+    private file: File,
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController) {
     this.student = navParams.get('student') || { specialNeeds: [] };
     this.pageMode = navParams.get('pageMode') || 'add';
     this.pageTitle = 'Cadastrar aluno';
@@ -53,30 +55,24 @@ export class StudentDetails {
       destinationType: this.camera.DestinationType.FILE_URI,
       mediaType: this.camera.MediaType.ALLMEDIA
     }
-    console.log('update')
-      this.camera.getPicture(options).then(fileUri => {
-          this.file.resolveLocalFilesystemUrl('file://'+fileUri).then((fileEntry: FileEntry) => {
-                fileEntry.file((file: any) => {
-                      console.log('1')
-                      const reader = new FileReader();
-                      reader.onloadend = (fileReadResult: any) => {
-                        console.log('2')
-                        let data = new Uint8Array(fileReadResult.target.result);
-                        let blob = new Blob([data], { type: file.type });
-                        this.student[prop] = { file: blob, path: fileEntry.toURL(), filename: fileEntry.name };
-                        console.log('3')
-                    };
-                      reader.readAsArrayBuffer(file);
-                })
-            }).catch(err => { console.log(err)});
+    this.camera.getPicture(options).then(fileUri => {
+        this.file.resolveLocalFilesystemUrl('file://'+fileUri).then((fileEntry: FileEntry) => {
+              fileEntry.file((file: any) => {
+                    const reader = new FileReader();
+                    reader.onloadend = (fileReadResult: any) => {
+                      let data = new Uint8Array(fileReadResult.target.result);
+                      let blob = new Blob([data], { type: file.type });
+                      this.student[prop] = { file: blob, path: fileEntry.toURL(), filename: fileEntry.name };
+                  };
+                    reader.readAsArrayBuffer(file);
+              })
           }).catch(err => { console.log(err)});
-
-        console.log(this.student);
+        }).catch(err => { console.log(err)});
   }
 
   updateSpecialNeeds(value) {
       let newSelectionArray;
-      console.log('change', value);
+      
       if(this.student.specialNeeds && this.student.specialNeeds.indexOf(value) > -1) {
           newSelectionArray = this.student.specialNeeds.filter(s => s !== value)
       } else {
@@ -88,6 +84,16 @@ export class StudentDetails {
 
   onSubmit() {
     let formData = new FormData();
+
+    let loading = this.loadingCtrl.create({
+      content: 'Salvando...'
+    });
+
+    loading.present();
+
+    loading.onDidDismiss((msg, data) => {
+      this.displayMessage(msg);
+    });
     
     Object.keys(this.student).forEach((key) => {
         if(typeof this.student[key] === 'object' && this.student[key].file) {
@@ -98,6 +104,20 @@ export class StudentDetails {
         }
     });
     
-    this.studentsService.saveStudent(formData);
+    this.studentsService.saveStudent(formData).then((res) => {
+        loading.dismiss('Aluno salvo com sucesso.');
+    }).catch((err) => {
+        loading.dismiss('Ocorreu algum erro. Não foi possível salvar o aluno.');
+    });
   }
+
+  private displayMessage(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 5000,
+      position: 'bottom'
+    });
+
+    toast.present();
+ }
 }

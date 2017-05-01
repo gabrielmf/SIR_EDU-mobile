@@ -16,9 +16,9 @@
     <ion-icon name="camera"></ion-icon>
   </button>
   <div *ngIf="media" class="media-preview">
-    <img *ngIf="media.type === 'image'" src="{{media.src}}" height="350" width="350"/>
+    <img *ngIf="media.type === 'image'" text-center src="{{media.src}}"/>
     <video webkit-playsinline *ngIf="media.type === 'video'" controls preload="metadata">
-      <source src="{{media.src}}" type="{{media.mimeType}}" height="350" width="350">
+      <source src="{{media.src}}" type="{{media.mimeType}}">
     </video>
   </div>
   <button class="remove-media"

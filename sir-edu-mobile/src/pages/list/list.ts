@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams, PopoverController } from 'ionic-angular';
-import StudentPage from '../student';
+import { StudentPage } from '../student';
 import StudentActions from '../../components/student-actions';
 import StudentsService from '../../services/students.service';
 import StudentDetailsPage from '../student-details';
