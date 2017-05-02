@@ -33,7 +33,10 @@ export class LoginPage {
       if(!form.form.valid) {
           return;
       }
+
       this.authService.login(this.loginForm).then(data => {
+        console.log(data);
+        localStorage.setItem('authToken', data.token);
         this.navCtrl.setRoot(ListPage);
       }, error => { this.showToastWithCloseButton(); });
   }

@@ -1,21 +1,27 @@
 import { Injectable } from '@angular/core';
 import { HTTP, HTTPResponse } from '@ionic-native/http';
-import { Http, Response } from '@angular/http';
+import { Http, Response, Headers } from '@angular/http';
 import { BASE_URL, BASE_URL_API } from '../app/app.settings'; 
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export default class FilesService {
-  private filesUrl = BASE_URL_API + 'files/';  // URL to web API
-  
-  constructor (private nativeHttp: HTTP, private http: Http) {}
+  private filesUrl = BASE_URL_API + 'files';  // URL to web API
+  private headers = new Headers();
+  private token: string;
+
+  constructor (private nativeHttp: HTTP, private http: Http) {
+    this.token =  localStorage.getItem('authToken');
+    this.headers.append('Authorization', 'Bearer ' + this.token);
+  }
 
   uploadFile(file, body): Promise<any> {
-    return this.nativeHttp.uploadFile(this.filesUrl, body, {}, file.src, file.name);
+    let header = { 'Authorization': 'Bearer ' + this.token };
+    return this.nativeHttp.uploadFile(this.filesUrl, body, header, file.src, file.name);
   }
 
   getFilesList(studentId: String): Promise<any> {
-      return this.http.get(this.filesUrl, { params: { studentId } })
+      return this.http.get(this.filesUrl, { headers: this.headers, params: { studentId } })
           .toPromise()
           .then(this.extractData.bind(this))
           .catch(this.handleError);
@@ -23,7 +29,7 @@ export default class FilesService {
 
   removeFile(fileId) {
       console.log(fileId);
-      return this.http.delete(this.filesUrl + fileId)
+      return this.http.delete(this.filesUrl + fileId, { headers: this.headers })
           .toPromise()
           .then(res => res.json())
           .catch(this.handleError);
@@ -33,7 +39,7 @@ export default class FilesService {
     let body = res.json() || {};
     
     body.forEach((data) => {
-      data['url'] = this.filesUrl + data._id;
+      data['url'] = this.filesUrl + '/' + data._id + '?token=' + this.token;
     });
 
     return Promise.resolve(body);

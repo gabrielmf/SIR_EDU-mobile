@@ -13,10 +13,8 @@ import StudentDetailsPage from '../pages/student-details';
 })
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
-
-  //TODO change to LoginPage when goes to production
-  // rootPage: any = LoginPage;
-  rootPage: any = ListPage;
+  
+  rootPage: any = localStorage.getItem('authToken') !== null ? ListPage : LoginPage;
 
   pages: Array<{title: string, component: any}>;
 

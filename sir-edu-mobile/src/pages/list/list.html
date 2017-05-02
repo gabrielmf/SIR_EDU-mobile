@@ -44,8 +44,9 @@
            color="primary">
           </ion-icon>
         <h2>{{student.name}}</h2>
-        <p>Turma: {{student.class || ''}} Escola: {{student.school || ''}}</p>
-        <ion-icon name="more"
+        <p>Turma: {{student.classNumber || ''}}&nbsp;&nbsp;&nbsp;&nbsp;Escola: {{student.school || ''}}</p>
+        <ion-icon 
+          name="more"
           item-right 
           (click)="showStudentPopover($event, student)"
           class="student-options">

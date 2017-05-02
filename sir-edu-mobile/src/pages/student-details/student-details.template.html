@@ -13,7 +13,12 @@
         <ion-list>
             <ion-item>
                 <label>Foto do aluno:</label>
-                <button full ion-button medium (click)="choosePicture('avatar')">Escolher arquivo</button>
+                <button 
+                    *ngIf="pageMode !== 'view'" 
+                    full ion-button medium 
+                    (click)="choosePicture('avatar')">
+                    Escolher arquivo
+                </button>
                 <img *ngIf="student.avatar" [src]="student.avatar.path" height="350" width="350"/>
             </ion-item>
             <ion-item>
@@ -47,7 +52,7 @@
             </ion-item>
             <ion-item>
                 <ion-label floating>Turma</ion-label>
-                <ion-input type="text"
+                <ion-input type="number"
                     [(ngModel)]="student.classNumber" name="classNumber"
                     #name="ngModel">
                 </ion-input>                
@@ -130,9 +135,27 @@
                 </ion-checkbox>
             </ion-item>
             <ion-item text-wrap>
-                <label>Inserir documento com aprovação dos pais:</label>
-                <button full ion-button medium (click)="choosePicture('docParentsAproval')">Escolher arquivo</button>
+                <div *ngIf="pageMode !== 'view'">
+                    <label>
+                        {{pageMode !== 'view' ? 'Inserir documento com aprovação dos pais:' :
+                        'Documento de aprovação dos pais:'}}
+                    </label>
+                    <button
+                        full ion-button medium 
+                        (click)="choosePicture('docParentsAproval')">
+                        Escolher arquivo
+                    </button>
+                </div>
                 <img *ngIf="student.docParentsAproval" [src]="student.docParentsAproval.path" height="350" width="350"/>
+            </ion-item>
+            <ion-item text-wrap>
+                <ion-label>Li e aceito o termo de uso</ion-label>
+                <ion-checkbox [checked]="student.termOfUse"
+                    [(ngModel)]="student.termOfUse"
+                    name="termOfUse"
+                    #name="ngModel">
+                </ion-checkbox>
+                <a>Clique aqui para ver o termo de uso</a>
             </ion-item>
         </ion-list>
         <button *ngIf="pageMode !== 'view'" full large ion-button color="secondary" (click)="onSubmit()">

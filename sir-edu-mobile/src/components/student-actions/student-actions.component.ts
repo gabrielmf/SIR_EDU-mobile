@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ViewController, LoadingController, ToastController } from 'ionic-angular';
 import StudentsService from '../../services/students.service';
 import StudentDetailsPage from '../../pages/student-details';
 
@@ -14,28 +14,58 @@ export class StudentActions {
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
-    public studentsService: StudentsService
-    ) {}
+    public studentsService: StudentsService,
+    private loadingCtrl: LoadingController,
+    private toastCtrl: ToastController,
+    public viewCtrl: ViewController) {}
 
   ngOnInit() {
     this.student = this.navParams.get('student');
   }
 
   view() {
-    this.navCtrl.push(StudentDetailsPage, {
-      student: this.student,
-      pageMode: 'view'
-    });
+    this.goToStudentDetails('view');
   }
 
   edit() {
-    this.navCtrl.push(StudentDetailsPage, {
-      student: this.student,
-      pageMode: 'edit'
-    });
+    this.goToStudentDetails('edit');
   }
 
   remove(student) {
-    this.studentsService.deleteStudent(this.student._id);
+    let loading = this.loadingCtrl.create({
+      content: 'Salvando...'
+    });
+
+    loading.present();
+
+    loading.onDidDismiss((msg, data) => {
+      this.displayMessage(msg);
+      this.viewCtrl.dismiss(data);
+    });
+
+    this.studentsService.deleteStudent(this.student._id).then((removedStudent) => {
+        console.log('removed', removedStudent);
+        loading.dismiss('Aluno ' + removedStudent.name + ' removido com sucesso.', removedStudent);
+    }).catch(err => {
+        loading.dismiss('Ocorreu algum erro. Não foi possível remover o aluno.');
+    });
+    
+  }
+
+  private goToStudentDetails(pageMode) {
+    this.navCtrl.push(StudentDetailsPage, {
+      student: this.student,
+      pageMode
+    });
+  }
+
+  private displayMessage(msg) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: 5000,
+      position: 'bottom'
+    });
+
+    toast.present();
   }
 }

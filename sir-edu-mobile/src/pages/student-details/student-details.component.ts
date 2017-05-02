@@ -103,7 +103,7 @@ export class StudentDetails {
           formData.append(key, this.student[key]);
         }
     });
-    
+
     this.studentsService.saveStudent(formData).then((res) => {
         loading.dismiss('Aluno salvo com sucesso.');
     }).catch((err) => {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, PopoverController } from 'ionic-angular';
+import { NavController, NavParams, PopoverController, LoadingController } from 'ionic-angular';
 import { StudentPage } from '../student';
 import StudentActions from '../../components/student-actions';
 import StudentsService from '../../services/students.service';
@@ -17,7 +17,8 @@ export class ListPage implements OnInit {
   constructor(
     private navCtrl: NavController,
     private studentsService: StudentsService,
-    private popoverCtrl: PopoverController) {
+    private popoverCtrl: PopoverController,
+    private loadingCtrl: LoadingController) {
       this.students = [];
       this.studentList = [];
   }
@@ -27,6 +28,7 @@ export class ListPage implements OnInit {
       list => { 
         this.studentList = list;
         this.students = list;
+        console.log(this.students);
        }
     ).catch(
       error => { console.log(error) }
@@ -56,6 +58,12 @@ export class ListPage implements OnInit {
     });
     
     popoverItem.present({ ev });
+
+    popoverItem.onDidDismiss((data) => {
+        if (data) {
+            this.ngOnInit();
+        }
+    });
   }
 
   addStudent() {
