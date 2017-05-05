@@ -12,6 +12,7 @@ export class StudentPage {
   @ViewChild(Content) content: Content;
   student: any;
   files: Array<Object>;
+  filteredFiles:  Array<Object>;
   image: String;
 
   constructor(
@@ -23,6 +24,7 @@ export class StudentPage {
 
     this.student = navParams.get('student') || {};
     this.files = [];
+    this.filteredFiles = [];
     this.image = '';
   }
 
@@ -34,13 +36,28 @@ export class StudentPage {
           url: file.url,
           type: file.contentType.split('/')[0],
           date: file.metadata.date,
-          comment: file.metadata.comment
+          comment: file.metadata.comment,
+          keywords: file.metadata.keywords
         };
       });
-      console.log(this.files);
+
+      this.filteredFiles = [ ...this.files ];
+
     }).catch((err) => {
       console.log(err);
     });
+  }
+
+  searchFile(evt) {
+    /*let kw = evt.target.value.toLowerCase().trim();
+
+    if (this.filteredFiles.length) {
+        this.filteredFiles = this.files.filter((file: any) => {
+          return file.keywords && file.keywords.length > 0 ? file.keywords.indexOf(kw) > -1 : false;
+        });
+    }
+
+    console.log('filter', this.filteredFiles);*/
   }
 
   addFile() {

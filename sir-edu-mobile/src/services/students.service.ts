@@ -30,7 +30,7 @@ export default class StudentsService {
   }
 
   deleteStudent(studentId): Promise<any> {
-    return this.http.delete(this.studentsUrl + studentId, { headers: this.headers })
+    return this.http.delete(this.studentsUrl + '/' + studentId, { headers: this.headers })
                     .toPromise()
                     .then(res => res.json())
                     .catch(this.handleError);

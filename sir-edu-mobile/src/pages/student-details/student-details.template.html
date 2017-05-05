@@ -19,7 +19,9 @@
                     (click)="choosePicture('avatar')">
                     Escolher arquivo
                 </button>
-                <img *ngIf="student.avatar" [src]="student.avatar.path" height="350" width="350"/>
+                <div>
+                    <img *ngIf="student.avatar" [src]="student.avatar.path" height="350"/>
+                </div>
             </ion-item>
             <ion-item>
                 <ion-label floating>Nome</ion-label>

@@ -31,18 +31,28 @@
   <form #UploadFileForm="ngForm">
     <ion-list>
       <ion-item>
-        <ion-label floating>Título</ion-label>
+        <ion-label floating>Palavras-chave:</ion-label>
         <ion-input
-          name="title"
-          ngModel
-          #title="ngModel">
+          name="keyword"
+          [(ngModel)]="keyword">
         </ion-input>
+        <button class="add-keyword" ion-button outline item-right>
+            <ion-icon icon-right name="add" (click)="addKeyword()"></ion-icon>
+        </button>
+      </ion-item>
+      <ion-item *ngIf="file.keywords" text-wrap>
+        <ion-chip class="keywords" *ngFor="let keyword of file.keywords; let i = index;">
+          <span class="label">{{keyword}}</span>
+          <button ion-button clear color="primary" (click)="removeKeyword(i)">
+            <ion-icon name="close-circle"></ion-icon>
+          </button>
+        </ion-chip>
       </ion-item>
       <ion-item>
         <ion-label floating>Comentário</ion-label>
         <ion-textarea
           name="comment"
-          ngModel 
+          [(ngModel)]="file.comment" 
           #comment="ngModel">
         </ion-textarea>
       </ion-item>
@@ -51,7 +61,7 @@
         <ion-datetime
           class="data"
           name="date"
-          ngModel
+          [(ngModel)]="file.date"
           displayFormat="DD/MM/YYYY"
           cancelText="cancelar"
           #date="ngModel"

@@ -17,18 +17,31 @@
       </button>
     </ion-buttons>
     </ion-navbar>
+    <ion-searchbar
+      showCancelButton="true"
+      (ionInput)="searchFile($event)"
+      placeholder="Pesquisar por palavra-chave">
+    </ion-searchbar>
   </ion-header>
   <ion-content class="student-content">
     <ion-list>
-        <ion-item *ngFor="let file of files">
+        <ion-item *ngFor="let file of filteredFiles" text-wrap>
           <img *ngIf="file.type === 'image'" text-center src="{{file.url}}"/>
           <video *ngIf="file.type === 'video'" controls preload="metadata">
             <source src="{{file.url}}" type="{{file.mimeType}}">
           </video>
-            <h2>{{file.title}}</h2>
+            <div *ngIf="file.keywords">
+              <b>Palavras-chave: </b>
+              <ion-chip class="keywords" *ngFor="let keyword of file.keywords">
+                <span class="label">{{keyword}}</span>
+              </ion-chip>
+            </div>
             <ion-row>
               <ion-col col-11>
-                  <p>{{file.comment}}</p><br>
+                  <b>Comentário:</b>
+                  <p>{{file.comment}}</p>
+                  <br>
+                  <b>Data:</b>
                   <p>{{file.date}}</p>
               </ion-col>
               <ion-col col-1>

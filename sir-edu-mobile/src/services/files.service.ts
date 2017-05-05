@@ -16,8 +16,8 @@ export default class FilesService {
   }
 
   uploadFile(file, body): Promise<any> {
-    let header = { 'Authorization': 'Bearer ' + this.token };
-    return this.nativeHttp.uploadFile(this.filesUrl, body, header, file.src, file.name);
+    let headers = { Authorization: 'Bearer ' + this.token };
+    return this.nativeHttp.uploadFile(this.filesUrl, body, headers, file.src, file.name);
   }
 
   getFilesList(studentId: String): Promise<any> {

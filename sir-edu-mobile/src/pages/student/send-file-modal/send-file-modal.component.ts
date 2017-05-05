@@ -11,12 +11,13 @@ import FilesService from '../../../services/files.service';
 })
 export class SendFileModal {
   media: { 
-    src: String,
-    mimeType: String,
-    type: String
+    src: string,
+    mimeType: string,
+    type: string
   };
-  hasMedia: Boolean;
-  studentId: String;
+  hasMedia: boolean;
+  studentId: string;
+  keyword: string;
   file: any;
 
   constructor(
@@ -32,15 +33,41 @@ export class SendFileModal {
     private toastCtrl: ToastController) {
     
     this.studentId = this.params.get('studentId');
-    this.file = this.params.get('file') || null;
+    this.file = this.params.get('file') || {};
 
     if (this.file) {
-      console.log('file', this.file);
+      this.media = {
+        src: this.file.url,
+        type: this.file.type,
+        mimeType: this.file.mimeType
+      };
+
+      this.hasMedia = true;
     }
   }
 
   dismiss() {
     this.viewCtrl.dismiss();
+  }
+
+  addKeyword() {
+    let keyword = this.keyword.toLowerCase().trim();
+    
+    if (keyword === '') {
+      return;
+    }
+
+    if (this.file.keywords && this.file.keywords.length) {
+      this.file['keywords'].push(keyword);
+    } else {
+      this.file['keywords'] = [ keyword ];
+    }
+
+    this.keyword = '';
+  }
+
+  removeKeyword(index) {
+    this.file.keywords.splice(index, 1);
   }
 
  takePicture() {
@@ -180,7 +207,12 @@ export class SendFileModal {
       this.displayMessage(msg);
     });
 
-    let body = { ...form.value, studentId: this.studentId };
+    let body = { ...this.file, studentId: this.studentId };
+
+    //Temporary, this is necessary because http cordova was failling, need to identify the root cause
+    if (body.keywords && body.keywords.length) {
+      body.keywords = body.keywords.toString();
+    }
     
     this.filesService.uploadFile(this.media, body).then((data) => {
         loading.dismiss('Arquivo salvo com sucesso.', data);
