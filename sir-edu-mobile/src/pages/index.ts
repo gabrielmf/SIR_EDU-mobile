@@ -4,6 +4,7 @@ import LoginPage from './login';
 import { StudentPage, FileActions } from './student';
 import SendFileModalPage from './student/send-file-modal';
 import StudentDetailsPage from './student-details';
+import SettingsPage from './Settings';
 
 const pages = [
     HomePage,
@@ -12,7 +13,8 @@ const pages = [
     StudentPage,
     FileActions,
     SendFileModalPage,
-    StudentDetailsPage
+    StudentDetailsPage,
+    SettingsPage
 ];
 
 export default pages;

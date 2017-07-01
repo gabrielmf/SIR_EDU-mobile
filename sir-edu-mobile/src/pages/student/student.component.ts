@@ -3,6 +3,11 @@ import { Content, NavController, NavParams, ModalController, PopoverController, 
 import { SendFileModal } from './send-file-modal/send-file-modal.component';
 import FilesService from '../../services/files.service';
 
+const formatDate = date => {
+  let dateObject = new Date(date);
+  return `${dateObject.getDate()}/${dateObject.getMonth()}/${dateObject.getFullYear()}`
+}
+
 @Component({
   selector: 'student',
   templateUrl: 'student.template.html'
@@ -35,7 +40,7 @@ export class StudentPage {
           id: file._id,
           url: file.url,
           type: file.contentType.split('/')[0],
-          date: file.metadata.date,
+          date: formatDate(file.metadata.date),
           comment: file.metadata.comment,
           keywords: file.metadata.keywords
         };

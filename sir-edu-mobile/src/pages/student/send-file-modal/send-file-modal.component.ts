@@ -33,8 +33,9 @@ export class SendFileModal {
     private toastCtrl: ToastController) {
     
     this.studentId = this.params.get('studentId');
-    this.file = this.params.get('file') || {};
-
+    this.file = this.params.get('file') || null;
+    this.hasMedia = false;
+    
     if (this.file) {
       this.media = {
         src: this.file.url,
@@ -43,6 +44,8 @@ export class SendFileModal {
       };
 
       this.hasMedia = true;
+    } else {
+      this.file = {};
     }
   }
 
@@ -139,6 +142,24 @@ export class SendFileModal {
     })
   }
 
+  recordAudio() {
+    this.mediaCapture.captureAudio().then((audios: MediaFile[]) => {
+      let audio = audios[0];
+      
+      this.ngZone.run(() => {
+        this.media = {
+          src: audio.fullPath,
+          mimeType: audio.type,
+          type: 'audio'
+        };
+      });
+
+      this.hasMedia = true;
+    }).catch((err: CaptureError) => {
+      console.log(err);
+    })
+  }
+
   cameraActions() {
    let actionSheet = this.actionSheetCtrl.create({
      title: 'Opções de envio',
@@ -153,9 +174,15 @@ export class SendFileModal {
        {
          text: 'Gravar vídeo',
          icon: 'videocam',
-         role: 'destructive',
          handler: () => {
            this.recordVideo();
+         }
+       },
+       {
+         text: 'Gravar áudio',
+         icon: 'mic',
+         handler: () => {
+           this.recordAudio();
          }
        },
        {

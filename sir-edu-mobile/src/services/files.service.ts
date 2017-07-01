@@ -28,8 +28,7 @@ export default class FilesService {
   }
 
   removeFile(fileId) {
-      console.log(fileId);
-      return this.http.delete(this.filesUrl + fileId, { headers: this.headers })
+      return this.http.delete(this.filesUrl + '/' + fileId, { headers: this.headers })
           .toPromise()
           .then(res => res.json())
           .catch(this.handleError);

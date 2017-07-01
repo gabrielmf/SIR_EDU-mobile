@@ -19,18 +19,6 @@
     animated="true">
   </ion-searchbar>
   <ion-list>
-    <ion-item (click)="goToStudentPage(student)">
-        <ion-avatar item-left>
-          <img src="assets/icon/favicon.ico">
-        </ion-avatar>
-        <h2>Nome</h2>
-        <p>Descrição</p>
-        <ion-icon name="more"
-          item-right 
-          (click)="showStudentPopover($event, student)"
-          class="student-options">
-        </ion-icon>
-    </ion-item>
     <ion-item *ngFor="let student of students"
         (click)="goToStudentPage(student)">
         <ion-avatar *ngIf="student.avatar" item-left>

@@ -20,6 +20,9 @@
     <video webkit-playsinline *ngIf="media.type === 'video'" controls preload="metadata">
       <source src="{{media.src}}" type="{{media.mimeType}}">
     </video>
+    <audio *ngIf="media.type === 'audio'" controls>
+      <source src="{{media.src}}" type="{{media.mimeType}}">
+    </audio>
   </div>
   <button class="remove-media"
     *ngIf="hasMedia" 
